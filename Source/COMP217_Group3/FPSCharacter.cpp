@@ -2,11 +2,12 @@
 
 
 #include "FPSCharacter.h"
+#include "ShooterWeapon.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create a first person camera component.
@@ -38,7 +39,6 @@ AFPSCharacter::AFPSCharacter()
 
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
-
 }
 
 // Called when the game starts or when spawned
@@ -49,9 +49,22 @@ void AFPSCharacter::BeginPlay()
 
 	// Display a debug message for five seconds.
 	// The -1 "Key" value argument prevents the message from being updated or refreshed.
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using FPSCharacter."));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using FPSCharacter."));
 
-	
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::FromInt(DefaultInventoryClasses.Num()));
+
+	//Add Weapon
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	if (DefaultInventoryClasses.Num() > 0) {
+		FVector SpawnLocation = FVector(0.0f, -30.0f, 0.0f);  
+		FRotator SpawnRotation = FRotator(180.0f, 0.0f, 90.0f);
+		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
+
+		AShooterWeapon* NewWeapon = GetWorld()->SpawnActor<AShooterWeapon>(DefaultInventoryClasses[0].Get(), SpawnTransform, SpawnInfo);
+		SetCurrentWeapon(NewWeapon);
+	}
 }
 
 // Called every frame
@@ -140,4 +153,26 @@ void AFPSCharacter::Fire()
 			}
 		}
 	}
+}
+
+FName AFPSCharacter::GetWeaponAttachPoint() const
+{
+	return WeaponAttachPoint;
+}
+
+USkeletalMeshComponent* AFPSCharacter::GetSpecifcPawnMesh() const
+{
+	return FPSMesh;
+}
+
+AShooterWeapon* AFPSCharacter::GetWeapon() const
+{
+	return CurrentWeapon;
+}
+
+void AFPSCharacter::SetCurrentWeapon(AShooterWeapon* NewWeapon)
+{
+	CurrentWeapon = NewWeapon;
+	NewWeapon->SetOwningPawn(this);	// Make sure weapon's MyPawn is pointing back to us. During replication, we can't guarantee APawn::CurrentWeapon will rep after AWeapon::MyPawn!
+	NewWeapon->OnEquip(NewWeapon);
 }

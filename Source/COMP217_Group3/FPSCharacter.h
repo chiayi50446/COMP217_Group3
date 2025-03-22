@@ -14,15 +14,46 @@ class COMP217_GROUP3_API AFPSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
+
+	/** get weapon attach point */
+	FName GetWeaponAttachPoint() const;
+
+
+	/** get currently equipped weapon */
+	UFUNCTION(BlueprintCallable, Category = "Game|Weapon")
+	class AShooterWeapon* GetWeapon() const;
+
+	/*
+	* Get either first or third person mesh.
+	*
+	* @param	WantFirstPerson		If true returns the first peron mesh, else returns the third
+	*/
+	USkeletalMeshComponent* GetSpecifcPawnMesh() const;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	/** socket or bone name for attaching weapon mesh */
+	UPROPERTY(EditDefaultsOnly, Category = Inventory)
+	FName WeaponAttachPoint;
+
+	/** updates current weapon */
+	void SetCurrentWeapon(class AShooterWeapon* NewWeapon);
+
+	/** currently equipped weapon */
+	UPROPERTY()
+	class AShooterWeapon* CurrentWeapon;
+
+	/** default inventory list */
+	UPROPERTY(EditDefaultsOnly, Category = Inventory)
+	TArray<TSubclassOf<class AShooterWeapon>> DefaultInventoryClasses;
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
