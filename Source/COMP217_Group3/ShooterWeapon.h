@@ -343,5 +343,11 @@ public:
 	void SetOwningPawn(AFPSCharacter* AFPSCharacter);
 	/** weapon is being equipped by owner pawn */
 	virtual void OnEquip(const AShooterWeapon* LastWeapon);
+	/** [local] weapon specific fire implementation */
+	virtual void FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass);
+	/** get the originating location for camera damage */
+	FVector GetCameraDamageStartLocation(const FVector& AimDir) const;
+	/** find hit */
+	FHitResult WeaponTrace(const FVector& TraceFrom, const FVector& TraceTo) const;
 };
 

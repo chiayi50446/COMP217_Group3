@@ -146,4 +146,103 @@ bool AShooterWeapon::IsAttachedToPawn() const
 	return bIsEquipped || bPendingEquip;
 }
 
+void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass)
+{
+	FVector ShootDir = GetInstigator()->GetBaseAimRotation().Vector();
+	FVector Origin = Mesh1P->GetSocketLocation(MuzzleAttachPoint);
 
+	// trace from camera to check what's under crosshair
+	const float ProjectileAdjustRange = 10000.0f;
+	const FVector StartTrace = GetCameraDamageStartLocation(ShootDir);
+	const FVector EndTrace = StartTrace + ShootDir * ProjectileAdjustRange;
+	FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
+
+	// and adjust directions to hit that actor
+	if (Impact.bBlockingHit)
+	{
+		const FVector AdjustedDir = (Impact.ImpactPoint - Origin).GetSafeNormal();
+		bool bWeaponPenetration = false;
+
+		const float DirectionDot = FVector::DotProduct(AdjustedDir, ShootDir);
+		if (DirectionDot < 0.0f)
+		{
+			// shooting backwards = weapon is penetrating
+			bWeaponPenetration = true;
+		}
+		else if (DirectionDot < 0.5f)
+		{
+			// check for weapon penetration if angle difference is big enough
+			// raycast along weapon mesh to check if there's blocking hit
+
+			FVector MuzzleStartTrace = Origin - Mesh1P->GetSocketRotation(MuzzleAttachPoint).Vector() * 150.0f;
+			FVector MuzzleEndTrace = Origin;
+			FHitResult MuzzleImpact = WeaponTrace(MuzzleStartTrace, MuzzleEndTrace);
+
+			if (MuzzleImpact.bBlockingHit)
+			{
+				bWeaponPenetration = true;
+			}
+		}
+
+		if (bWeaponPenetration)
+		{
+			// spawn at crosshair position
+			Origin = Impact.ImpactPoint - ShootDir * 10.0f;
+		}
+		else
+		{
+			// adjust direction to hit
+			ShootDir = AdjustedDir;
+		}
+	}
+
+	FTransform SpawnTM(ShootDir.Rotation(), Origin);
+
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		// Spawn the projectile at the muzzle.
+		AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnTM, SpawnParams);
+		if (Projectile)
+		{
+			// Set the projectile's initial trajectory.
+			Projectile->FireInDirection(ShootDir);
+
+		}
+	}
+}
+
+FVector AShooterWeapon::GetCameraDamageStartLocation(const FVector& AimDir) const
+{
+	AShooterPlayerController* PC = MyPawn ? Cast<AShooterPlayerController>(MyPawn->Controller) : NULL;
+	FVector OutStartTrace = FVector::ZeroVector;
+
+	if (PC)
+	{
+		// use player's camera
+		FRotator UnusedRot;
+		PC->GetPlayerViewPoint(OutStartTrace, UnusedRot);
+
+		// Adjust trace so there is nothing blocking the ray between the camera and the pawn, and calculate distance from adjusted start
+		OutStartTrace = OutStartTrace + AimDir * ((GetInstigator()->GetActorLocation() - OutStartTrace) | AimDir);
+	}
+
+	return OutStartTrace;
+}
+
+FHitResult AShooterWeapon::WeaponTrace(const FVector& StartTrace, const FVector& EndTrace) const
+{
+
+	// Perform trace to retrieve hit info
+	FCollisionQueryParams TraceParams(SCENE_QUERY_STAT(WeaponTrace), true, GetInstigator());
+	TraceParams.bReturnPhysicalMaterial = true;
+
+	FHitResult Hit(ForceInit);
+	GetWorld()->LineTraceSingleByChannel(Hit, StartTrace, EndTrace, ECC_Visibility, TraceParams);
+
+	return Hit;
+}
