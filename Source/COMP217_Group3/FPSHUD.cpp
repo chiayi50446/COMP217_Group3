@@ -7,8 +7,11 @@
 void AFPSHUD::BeginPlay()
 {
 	Super::BeginPlay();
+	FString CurrentLevelName = GetWorld()->GetMapName();
+	CurrentLevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
-	if (ScoreWidgetClass)
+	
+	if (CurrentLevelName != "MainMenu" && ScoreWidgetClass)
 	{
 		ScoreWidget = CreateWidget<UUserWidget>(GetWorld(), ScoreWidgetClass);
 		if (ScoreWidget)
@@ -16,6 +19,7 @@ void AFPSHUD::BeginPlay()
 			ScoreWidget->AddToViewport();
 		}
 	}
+
 }
 
 void AFPSHUD::DrawHUD()
@@ -35,4 +39,13 @@ void AFPSHUD::DrawHUD()
 		TileItem.BlendMode = SE_BLEND_Translucent;
 		Canvas->DrawItem(TileItem);
 	}
+
+	/*if (ScoreWidgetClass)
+	{
+		ScoreWidget = CreateWidget<UUserWidget>(GetWorld(), ScoreWidgetClass);
+		if (ScoreWidget)
+		{
+			ScoreWidget->AddToViewport();
+		}
+	}*/
 }
