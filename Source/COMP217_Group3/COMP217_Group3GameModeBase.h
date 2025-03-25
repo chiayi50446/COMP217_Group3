@@ -14,4 +14,10 @@ class COMP217_GROUP3_API ACOMP217_Group3GameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	virtual void StartPlay() override;
+public:
+	UFUNCTION()
+	void RespawnTarget(FVector SpawnLocation);
+
+private:
+	void SpawnTarget(FVector SpawnLocation);
 };

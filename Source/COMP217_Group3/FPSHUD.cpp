@@ -2,6 +2,21 @@
 
 
 #include "FPSHUD.h"
+#include "Blueprint/UserWidget.h"
+
+void AFPSHUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (ScoreWidgetClass)
+	{
+		ScoreWidget = CreateWidget<UUserWidget>(GetWorld(), ScoreWidgetClass);
+		if (ScoreWidget)
+		{
+			ScoreWidget->AddToViewport();
+		}
+	}
+}
 
 void AFPSHUD::DrawHUD()
 {

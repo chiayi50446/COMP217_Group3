@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FPSProjectile.h"
+#include "ShootingTarget.h"
 
 // Sets default values
 AFPSProjectile::AFPSProjectile()
@@ -90,6 +91,10 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 	{
 		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
 	}
-
+	AShootingTarget* Target = Cast<AShootingTarget>(OtherActor);
+	if (Target)
+	{
+		Target->OnHit(GetInstigator());
+	}
 	Destroy();
 }

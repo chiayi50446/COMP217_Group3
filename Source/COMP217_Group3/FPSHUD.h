@@ -18,7 +18,15 @@ protected:
 	// This will be drawn at the center of the screen.
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* CrosshairTexture;
+	virtual void BeginPlay() override;
+
 public:
 	// Primary draw call for the HUD.
 	virtual void DrawHUD() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class UUserWidget> ScoreWidgetClass;
+
+	UPROPERTY()
+	class UUserWidget* ScoreWidget;
 };
