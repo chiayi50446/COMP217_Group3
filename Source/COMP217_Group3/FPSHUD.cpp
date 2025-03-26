@@ -11,7 +11,7 @@ void AFPSHUD::BeginPlay()
 	CurrentLevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
 	
-	if (CurrentLevelName != "MainMenu" && ScoreWidgetClass)
+	if ((CurrentLevelName != "MainMenu" && CurrentLevelName != "EndMenu") && ScoreWidgetClass)
 	{
 		ScoreWidget = CreateWidget<UUserWidget>(GetWorld(), ScoreWidgetClass);
 		if (ScoreWidget)
