@@ -16,8 +16,16 @@ class COMP217_GROUP3_API ACOMP217_Group3GameModeBase : public AGameModeBase
 	virtual void StartPlay() override;
 public:
 	UFUNCTION()
+	void BeginPlay() override;
 	void RespawnTarget(FVector SpawnLocation);
+
+
+	UPROPERTY(BlueprintReadOnly)
+	int TimerCount = 10;
 
 private:
 	void SpawnTarget(FVector SpawnLocation);
+	void GameEnd();
+	FTimerHandle CountDownTimerHandle = FTimerHandle();
+	void CoutDownTimer();
 };
