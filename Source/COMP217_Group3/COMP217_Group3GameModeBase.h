@@ -18,16 +18,13 @@ class COMP217_GROUP3_API ACOMP217_Group3GameModeBase : public AGameModeBase
 public:
 	UFUNCTION()
 	void BeginPlay() override;
-	void RespawnTarget(FVector SpawnLocation);
-
-	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TSubclassOf<AShootingTarget> ShootingTargetBlueprint;
+	void RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint);
 
 	UPROPERTY(BlueprintReadOnly)
 	int TimerCount = 10;
 
 private:
-	void SpawnTarget(FVector SpawnLocation);
+	void SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint);
 	void GameEnd();
 	FTimerHandle CountDownTimerHandle = FTimerHandle();
 	void CoutDownTimer();

@@ -29,4 +29,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* SkeletalMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	int Score = 10;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Respawn")
+	TSubclassOf<AShootingTarget> TargetBlueprint;
 };

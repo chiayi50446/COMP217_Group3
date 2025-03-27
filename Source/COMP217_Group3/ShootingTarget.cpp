@@ -21,14 +21,6 @@ AShootingTarget::AShootingTarget()
     SkeletalMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     SkeletalMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
-
-    if (SkeletalMesh->GetMaterial(0) == nullptr) {
-        static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT("SkeletalMesh'/Game/SciFiSoldier03/Meshes/SK_SciFiSoldier03.SK_SciFiSoldier03'"));
-        if (MeshAsset.Succeeded())
-        {
-            SkeletalMesh->SetSkeletalMesh(MeshAsset.Object);
-        }
-    }
 }
 
 // Called when the game starts or when spawned
@@ -53,14 +45,14 @@ void AShootingTarget::OnHit(AActor* HitActor)
         AFPSPlayerState* PlayerState = Shooter->GetPlayerState<AFPSPlayerState>();
         if (PlayerState)
         {
-            PlayerState->AddScore(10); // add 10 score
+            PlayerState->AddScore(Score); // add 10 score
         }
     }
 
     ACOMP217_Group3GameModeBase* GameMode = GetWorld()->GetAuthGameMode<ACOMP217_Group3GameModeBase>();
     if (GameMode)
     {
-        GameMode->RespawnTarget(GetActorLocation());
+        GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint);
     }
 
     // remove Target

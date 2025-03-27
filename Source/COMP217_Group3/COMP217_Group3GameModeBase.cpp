@@ -44,25 +44,24 @@ void ACOMP217_Group3GameModeBase::StartPlay()
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Hello World, this is FPSGameMode!"));
 
 }
-void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation)
+void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint)
 {
-    GetWorldTimerManager().SetTimerForNextTick([this, SpawnLocation]() {
+    GetWorldTimerManager().SetTimerForNextTick([this, SpawnLocation, TargetBlueprint]() {
         FTimerHandle TimerHandle;
         GetWorldTimerManager().SetTimer(
             TimerHandle,
-            FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation),
+            FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation, TargetBlueprint),
             1.0f,
             false
         );
         });
 }
 
-void ACOMP217_Group3GameModeBase::SpawnTarget(FVector SpawnLocation)
+void ACOMP217_Group3GameModeBase::SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint)
 {
-    //GetWorld()->SpawnActor<AShootingTarget>(AShootingTarget::StaticClass(), SpawnLocation, FRotator::ZeroRotator);
-    if (ShootingTargetBlueprint)
+    if (TargetBlueprint)
     {
-        GetWorld()->SpawnActor<AShootingTarget>(ShootingTargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
+        GetWorld()->SpawnActor<AShootingTarget>(TargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
     }
 }
 
