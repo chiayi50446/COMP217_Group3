@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ShootingTarget.h"
 #include "GameFramework/GameModeBase.h"
 #include "COMP217_Group3GameModeBase.generated.h"
 
@@ -19,6 +20,8 @@ public:
 	void BeginPlay() override;
 	void RespawnTarget(FVector SpawnLocation);
 
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AShootingTarget> ShootingTargetBlueprint;
 
 	UPROPERTY(BlueprintReadOnly)
 	int TimerCount = 10;

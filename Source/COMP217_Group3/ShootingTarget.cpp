@@ -27,8 +27,6 @@ AShootingTarget::AShootingTarget()
         if (MeshAsset.Succeeded())
         {
             SkeletalMesh->SetSkeletalMesh(MeshAsset.Object);
-            SkeletalMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
-            SkeletalMesh->PlayAnimation(MyAnimationAsset, true);
         }
     }
 }
@@ -37,7 +35,6 @@ AShootingTarget::AShootingTarget()
 void AShootingTarget::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

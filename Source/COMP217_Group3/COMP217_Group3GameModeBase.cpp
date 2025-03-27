@@ -6,6 +6,7 @@
 #include "TimerManager.h"
 #include "FPSGameInstance.h"
 #include "FPSPlayerState.h"
+#include "ShootingTarget.h"
 #include <Kismet/GameplayStatics.h>
 
 
@@ -58,7 +59,11 @@ void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation)
 
 void ACOMP217_Group3GameModeBase::SpawnTarget(FVector SpawnLocation)
 {
-    GetWorld()->SpawnActor<AShootingTarget>(AShootingTarget::StaticClass(), SpawnLocation, FRotator::ZeroRotator);
+    //GetWorld()->SpawnActor<AShootingTarget>(AShootingTarget::StaticClass(), SpawnLocation, FRotator::ZeroRotator);
+    if (ShootingTargetBlueprint)
+    {
+        GetWorld()->SpawnActor<AShootingTarget>(ShootingTargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
+    }
 }
 
 void ACOMP217_Group3GameModeBase::GameEnd()
