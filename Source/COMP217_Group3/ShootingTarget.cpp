@@ -4,6 +4,7 @@
 #include "ShootingTarget.h"
 #include "FPSCharacter.h"
 #include "FPSPlayerState.h"
+#include "Animation/AnimSequence.h"
 #include "COMP217_Group3GameModeBase.h"
 
 // Sets default values
@@ -13,20 +14,21 @@ AShootingTarget::AShootingTarget()
 	PrimaryActorTick.bCanEverTick = true;
 
     // Set target Mesh
-    TargetMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TargetMesh"));
-    RootComponent = TargetMesh;
+    SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+    RootComponent = SkeletalMesh;
 
-    // set target can be shoot
-    TargetMesh->SetCollisionObjectType(ECC_PhysicsBody);
-    TargetMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    TargetMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+    SkeletalMesh->SetCollisionObjectType(ECC_PhysicsBody);
+    SkeletalMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    SkeletalMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
-    if (TargetMesh->GetMaterial(0) == nullptr)
-    {
-        static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("'/Game/Sphere.Sphere'"));
-        if (Mesh.Succeeded())
+
+    if (SkeletalMesh->GetMaterial(0) == nullptr) {
+        static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT("SkeletalMesh'/Game/SciFiSoldier03/Meshes/SK_SciFiSoldier03.SK_SciFiSoldier03'"));
+        if (MeshAsset.Succeeded())
         {
-            TargetMesh->SetStaticMesh(Mesh.Object);
+            SkeletalMesh->SetSkeletalMesh(MeshAsset.Object);
+            SkeletalMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+            SkeletalMesh->PlayAnimation(MyAnimationAsset, true);
         }
     }
 }
