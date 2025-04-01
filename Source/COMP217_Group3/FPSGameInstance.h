@@ -17,7 +17,7 @@ public:
     UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
     int32 SavedScore;
     UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
-    FString PreviousLevel;
+    FString CurrentLevel;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FinalLevel = "Demonstration";
 };

@@ -17,6 +17,12 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
     FString CurrentLevelName = GetWorld()->GetMapName();
     CurrentLevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
+    UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
+    if (GameInstance)
+    {
+        GameInstance->CurrentLevel = CurrentLevelName;
+    }
+
     if (CurrentLevelName == "Safe_House")
     {
         TimerCount = 30;
@@ -74,7 +80,6 @@ void ACOMP217_Group3GameModeBase::GameEnd()
         if (PlayerState)
         {
             GameInstance->SavedScore = PlayerState->GetScore();
-            GameInstance->PreviousLevel = GetWorld()->GetName();
         }
     }
 
