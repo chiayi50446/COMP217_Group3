@@ -36,15 +36,13 @@ void AMovingShootingTarget::Tick(float DeltaTime)
 
     SetActorLocation(NewLocation);
 
-    // 設置旋轉，讓物件面向移動方向
-    if (!Direction.IsNearlyZero()) // 確保方向有效
+    if (!Direction.IsNearlyZero())
     {
         FRotator NewRotation = Direction.Rotation();
         NewRotation.Yaw -= 90.0f;
         SetActorRotation(NewRotation);
     }
 
-    // 檢查是否接近目標點
     if (FVector::Dist(NewLocation, TargetLocation) < 10.f)
     {
         CurrentTargetIndex = (CurrentTargetIndex + 1) % TargetPoints.Num();
