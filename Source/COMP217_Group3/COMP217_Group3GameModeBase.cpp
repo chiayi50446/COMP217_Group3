@@ -18,7 +18,7 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
     CurrentLevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
     UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
-    if (GameInstance)
+    if (GameInstance && !CurrentLevelName.Contains("Menu"))
     {
         GameInstance->CurrentLevel = CurrentLevelName;
     }
