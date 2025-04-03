@@ -80,6 +80,9 @@ public:
 	UFUNCTION()
 	void Fire();
 
+	UFUNCTION()
+	void Reload();
+
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;

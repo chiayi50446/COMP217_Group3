@@ -20,4 +20,6 @@ public:
     FString CurrentLevel;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FinalLevel = "Demonstration";
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 Magazine;
 };

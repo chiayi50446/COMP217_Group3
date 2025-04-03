@@ -26,10 +26,12 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
     if (CurrentLevelName == "Safe_House")
     {
         TimerCount = 30;
+        if (GameInstance) GameInstance->Magazine = 5;
     }
     else if (CurrentLevelName == "Demonstration")
     {
-        TimerCount = 5;
+        TimerCount = 50;
+        if (GameInstance) GameInstance->Magazine = 10;
     }
     else
     {

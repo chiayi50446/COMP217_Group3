@@ -345,6 +345,7 @@ public:
 	virtual void OnEquip(const AShooterWeapon* LastWeapon);
 	/** [local] weapon specific fire implementation */
 	virtual void FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass);
+	virtual void ReloadMagazine();
 	/** get the originating location for camera damage */
 	FVector GetCameraDamageStartLocation(const FVector& AimDir) const;
 	/** find hit */

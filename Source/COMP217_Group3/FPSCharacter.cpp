@@ -89,6 +89,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::StartJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AFPSCharacter::StopJump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::Reload);
 
 }
 
@@ -120,6 +121,13 @@ void AFPSCharacter::Fire()
 {
 	if (CurrentWeapon) {
 		CurrentWeapon->FireWeapon(ProjectileClass);
+	}
+}
+
+void AFPSCharacter::Reload()
+{
+	if (CurrentWeapon) {
+		CurrentWeapon->ReloadMagazine();
 	}
 }
 

@@ -5,6 +5,7 @@
 #include "FPSCharacter.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "ShooterPlayerController.h"
+#include "FPSGameInstance.h"
 //#include "Online/ShooterPlayerState.h"
 #include "FPSHUD.h"
 #include "Kismet/GameplayStatics.h"
@@ -148,6 +149,17 @@ bool AShooterWeapon::IsAttachedToPawn() const
 
 void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass)
 {
+	UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		if (GameInstance->Magazine == 0) {
+			return;
+		}
+		else {
+			GameInstance->Magazine--;
+		}
+	}
+
 	FVector ShootDir = GetInstigator()->GetBaseAimRotation().Vector();
 	FVector Origin = Mesh1P->GetSocketLocation(MuzzleAttachPoint);
 
@@ -214,6 +226,21 @@ void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClas
 
 		}
 	}
+}
+
+void AShooterWeapon::ReloadMagazine()
+{
+	UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		if (GameInstance->CurrentLevel == "Safe_House") {
+			GameInstance->Magazine = 5;
+		}
+		else {
+			GameInstance->Magazine = 10;
+		}
+	}
+
 }
 
 FVector AShooterWeapon::GetCameraDamageStartLocation(const FVector& AimDir) const
