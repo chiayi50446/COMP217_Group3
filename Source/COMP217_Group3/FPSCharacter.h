@@ -34,6 +34,9 @@ public:
 	*/
 	USkeletalMeshComponent* GetSpecifcPawnMesh() const;
 
+	FTimerHandle ReloadTimerHandle;
+	void FinishReload();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

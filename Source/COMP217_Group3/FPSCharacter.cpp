@@ -128,8 +128,23 @@ void AFPSCharacter::Fire()
 void AFPSCharacter::Reload()
 {
 	if (CurrentWeapon && !isReload && !isFire) {
-		CurrentWeapon->ReloadMagazine();
 		isReload = true;
+
+		GetWorld()->GetTimerManager().SetTimer(
+			ReloadTimerHandle,
+			this,
+			&AFPSCharacter::FinishReload,
+			1.0f,
+			false
+		);
+	}
+}
+
+void AFPSCharacter::FinishReload()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->ReloadMagazine();
 	}
 }
 
