@@ -19,6 +19,7 @@ public:
 	UFUNCTION()
 	void BeginPlay() override;
 	void RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint);
+	void AddTimer(int addTime);
 
 	UPROPERTY(BlueprintReadOnly)
 	int TimerCount = 10;

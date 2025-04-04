@@ -97,3 +97,8 @@ void ACOMP217_Group3GameModeBase::CoutDownTimer()
         GameEnd();
     }
 }
+
+void ACOMP217_Group3GameModeBase::AddTimer(int addTime)
+{
+    TimerCount += addTime;
+}

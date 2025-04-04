@@ -32,6 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int Score = 10;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	int AddTime = 0;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Respawn")
 	TSubclassOf<AShootingTarget> TargetBlueprint;
 };

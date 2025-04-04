@@ -45,7 +45,10 @@ void AShootingTarget::OnHit(AActor* HitActor)
         AFPSPlayerState* PlayerState = Shooter->GetPlayerState<AFPSPlayerState>();
         if (PlayerState)
         {
-            PlayerState->AddScore(Score); // add 10 score
+            if (Score != 0)
+            {
+                PlayerState->AddScore(Score);
+            }
         }
     }
 
@@ -53,6 +56,11 @@ void AShootingTarget::OnHit(AActor* HitActor)
     if (GameMode)
     {
         GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint);
+
+        if (AddTime != 0)
+        {
+            GameMode->AddTimer(AddTime);
+        }
     }
 
     // remove Target
