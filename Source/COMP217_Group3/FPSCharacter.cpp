@@ -119,15 +119,17 @@ void AFPSCharacter::StopJump()
 
 void AFPSCharacter::Fire()
 {
-	if (CurrentWeapon) {
+	if (CurrentWeapon && !isReload && !isFire) {
 		CurrentWeapon->FireWeapon(ProjectileClass);
+		isFire = true;
 	}
 }
 
 void AFPSCharacter::Reload()
 {
-	if (CurrentWeapon) {
+	if (CurrentWeapon && !isReload && !isFire) {
 		CurrentWeapon->ReloadMagazine();
+		isReload = true;
 	}
 }
 
@@ -151,4 +153,14 @@ void AFPSCharacter::SetCurrentWeapon(AShooterWeapon* NewWeapon)
 	CurrentWeapon = NewWeapon;
 	NewWeapon->SetOwningPawn(this);	// Make sure weapon's MyPawn is pointing back to us. During replication, we can't guarantee APawn::CurrentWeapon will rep after AWeapon::MyPawn!
 	NewWeapon->OnEquip(NewWeapon);
+}
+
+void AFPSCharacter::SetIsReload(bool newIsReload)
+{
+	isReload = newIsReload;
+}
+
+void AFPSCharacter::SetIsFire(bool newIsFire)
+{
+	isFire = newIsFire;
 }

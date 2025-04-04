@@ -98,4 +98,16 @@ public:
 	// Projectile class to spawn.
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<class AFPSProjectile> ProjectileClass;
+
+	UPROPERTY(BlueprintReadWrite, Category = Character)
+	bool isReload;
+
+	UFUNCTION()
+	void SetIsReload(bool newIsReload);
+
+	UPROPERTY(BlueprintReadWrite, Category = Character)
+	bool isFire;
+
+	UFUNCTION()
+	void SetIsFire(bool newIsFire);
 };
