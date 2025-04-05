@@ -218,8 +218,14 @@ protected:
 	UForceFeedbackEffect* FireForceFeedback;
 
 	/** single fire sound (bLoopedFireSound not set) */
-	UPROPERTY(EditDefaultsOnly, Category = Sound)
-	USoundCue* FireSound;
+	//UPROPERTY(EditDefaultsOnly, Category = Sound)
+	////USoundCue* FireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
+	USoundBase* FireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
+	USoundBase* FireDrySound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
+	USoundBase* ReloadSound;
 
 	/** looped fire sound (bLoopedFireSound set) */
 	UPROPERTY(EditDefaultsOnly, Category = Sound)
@@ -234,8 +240,8 @@ protected:
 	USoundCue* OutOfAmmoSound;
 
 	/** reload sound */
-	UPROPERTY(EditDefaultsOnly, Category = Sound)
-	USoundCue* ReloadSound;
+	/*UPROPERTY(EditDefaultsOnly, Category = Sound)
+	USoundCue* ReloadSound;*/
 
 	/** reload animations */
 	UPROPERTY(EditDefaultsOnly, Category = Animation)
@@ -346,6 +352,8 @@ public:
 	/** [local] weapon specific fire implementation */
 	virtual void FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass);
 	virtual void ReloadMagazine();
+	FTimerHandle ReloadTimerHandle;
+	void FinishReload();
 	/** get the originating location for camera damage */
 	FVector GetCameraDamageStartLocation(const FVector& AimDir) const;
 	/** find hit */

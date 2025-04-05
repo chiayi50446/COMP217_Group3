@@ -39,6 +39,11 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
     }
     GetWorldTimerManager().SetTimer(CountDownTimerHandle, this,
         &ACOMP217_Group3GameModeBase::CoutDownTimer, 1.0f, true, 1.0f);
+
+    if (BGM_Sound)
+    {
+        UGameplayStatics::PlaySound2D(this, BGM_Sound, 0.2f, 1.0f, 0.0f);  // ¥`¿ÙºΩ©Ò
+    }
 }
 
 void ACOMP217_Group3GameModeBase::StartPlay()

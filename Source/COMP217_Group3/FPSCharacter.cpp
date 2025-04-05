@@ -3,6 +3,7 @@
 
 #include "FPSCharacter.h"
 #include "ShooterWeapon.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -65,6 +66,12 @@ void AFPSCharacter::BeginPlay()
 		AShooterWeapon* NewWeapon = GetWorld()->SpawnActor<AShooterWeapon>(DefaultInventoryClasses[0].Get(), SpawnTransform, SpawnInfo);
 		SetCurrentWeapon(NewWeapon);
 	}
+
+	if (MoveSound)
+	{
+		WalkAudioComponent = UGameplayStatics::SpawnSoundAttached(MoveSound, GetRootComponent());
+		WalkAudioComponent->Stop();
+	}
 }
 
 // Called every frame
@@ -98,6 +105,11 @@ void AFPSCharacter::MoveForward(float Value)
 	// Find out which way is "forward" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
 	AddMovementInput(Direction, Value);
+
+	if (FMath::Abs(Value) > KINDA_SMALL_NUMBER)
+	{
+		PlayerMoveSound(Value);
+	}
 }
 
 void AFPSCharacter::MoveRight(float Value)
@@ -105,6 +117,30 @@ void AFPSCharacter::MoveRight(float Value)
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
+	if (FMath::Abs(Value) > KINDA_SMALL_NUMBER)
+	{
+		PlayerMoveSound(Value);
+	}
+}
+
+void AFPSCharacter::PlayerMoveSound(float Value) {
+	const bool bIsRunSoundPlaying = WalkAudioComponent != nullptr && WalkAudioComponent->IsActive();
+	const bool bWantsRunSoundPlaying = FMath::Abs(Value) > KINDA_SMALL_NUMBER;
+
+	// Don't bother playing the sounds unless we're running and moving.
+	if (!bIsRunSoundPlaying && bWantsRunSoundPlaying)
+	{
+		if (WalkAudioComponent != nullptr)
+		{
+			WalkAudioComponent->SetPitchMultiplier(2.8f);
+			WalkAudioComponent->SetVolumeMultiplier(1.0f);
+			WalkAudioComponent->Play();
+		}
+	}
+	else if (bIsRunSoundPlaying && !bWantsRunSoundPlaying)
+	{
+		WalkAudioComponent->Stop();
+	}
 }
 
 void AFPSCharacter::StartJump()
@@ -114,7 +150,26 @@ void AFPSCharacter::StartJump()
 
 void AFPSCharacter::StopJump()
 {
+	GetWorld()->GetTimerManager().SetTimer(
+		ReloadTimerHandle,
+		this,
+		&AFPSCharacter::PlayJumpSound,
+		0.5f,
+		false
+	);
 	bPressedJump = false;
+}
+
+void AFPSCharacter::PlayJumpSound() {
+
+	if (JumpSound) {
+
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			JumpSound,
+			GetActorLocation()
+		);
+	}
 }
 
 void AFPSCharacter::Fire()
@@ -130,21 +185,10 @@ void AFPSCharacter::Reload()
 	if (CurrentWeapon && !isReload && !isFire) {
 		isReload = true;
 
-		GetWorld()->GetTimerManager().SetTimer(
-			ReloadTimerHandle,
-			this,
-			&AFPSCharacter::FinishReload,
-			1.0f,
-			false
-		);
-	}
-}
-
-void AFPSCharacter::FinishReload()
-{
-	if (CurrentWeapon)
-	{
-		CurrentWeapon->ReloadMagazine();
+		if (CurrentWeapon)
+		{
+			CurrentWeapon->ReloadMagazine();
+		}
 	}
 }
 

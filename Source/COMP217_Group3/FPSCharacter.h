@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/AudioComponent.h"
 #include "FPSProjectile.h"
 #include "FPSCharacter.generated.h"
 
@@ -34,8 +35,6 @@ public:
 	*/
 	USkeletalMeshComponent* GetSpecifcPawnMesh() const;
 
-	FTimerHandle ReloadTimerHandle;
-	void FinishReload();
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,6 +54,17 @@ protected:
 	/** default inventory list */
 	UPROPERTY(EditDefaultsOnly, Category = Inventory)
 	TArray<TSubclassOf<class AShooterWeapon>> DefaultInventoryClasses;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
+	USoundBase* MoveSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
+	USoundBase* JumpSound;
+
+	FTimerHandle ReloadTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Audio)
+	UAudioComponent* WalkAudioComponent;
 
 public:
 	// Called every frame
@@ -78,6 +88,8 @@ public:
 	// Clears jump flag when key is released.
 	UFUNCTION()
 	void StopJump();
+	void PlayJumpSound();
+	void PlayerMoveSound(float Value);
 
 	// Function that handles firing projectiles.
 	UFUNCTION()

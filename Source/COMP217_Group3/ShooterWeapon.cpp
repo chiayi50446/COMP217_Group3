@@ -149,14 +149,39 @@ bool AShooterWeapon::IsAttachedToPawn() const
 
 void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass)
 {
+	if (GetWorld()->GetMapName().Contains("Menu"))
+	{
+		return;
+	}
 	UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
 		if (GameInstance->Magazine == 0) {
+
+			if (FireDrySound) {
+				UGameplayStatics::SpawnSoundAtLocation(
+					this,
+					FireDrySound,
+					GetActorLocation()
+				);
+			}
 			return;
 		}
 		else {
 			GameInstance->Magazine--;
+		}
+	}
+
+	if (FireSound) {
+		UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(
+			this,
+			FireSound,
+			GetActorLocation()
+		);
+
+		if (AudioComponent)
+		{
+			AudioComponent->SetPitchMultiplier(1.5f);
 		}
 	}
 
@@ -168,45 +193,6 @@ void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClas
 	const FVector StartTrace = GetCameraDamageStartLocation(ShootDir);
 	const FVector EndTrace = StartTrace + ShootDir * ProjectileAdjustRange;
 	FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
-
-	// and adjust directions to hit that actor
-	//if (Impact.bBlockingHit)
-	//{
-	//	const FVector AdjustedDir = (Impact.ImpactPoint - Origin).GetSafeNormal();
-	//	bool bWeaponPenetration = false;
-
-	//	const float DirectionDot = FVector::DotProduct(AdjustedDir, ShootDir);
-	//	if (DirectionDot < 0.0f)
-	//	{
-	//		// shooting backwards = weapon is penetrating
-	//		bWeaponPenetration = true;
-	//	}
-	//	else if (DirectionDot < 0.5f)
-	//	{
-	//		// check for weapon penetration if angle difference is big enough
-	//		// raycast along weapon mesh to check if there's blocking hit
-
-	//		FVector MuzzleStartTrace = Origin - Mesh1P->GetSocketRotation(MuzzleAttachPoint).Vector() * 150.0f;
-	//		FVector MuzzleEndTrace = Origin;
-	//		FHitResult MuzzleImpact = WeaponTrace(MuzzleStartTrace, MuzzleEndTrace);
-
-	//		if (MuzzleImpact.bBlockingHit)
-	//		{
-	//			bWeaponPenetration = true;
-	//		}
-	//	}
-
-	//	if (bWeaponPenetration)
-	//	{
-	//		// spawn at crosshair position
-	//		Origin = Impact.ImpactPoint - ShootDir * 10.0f;
-	//	}
-	//	else
-	//	{
-	//		// adjust direction to hit
-	//		ShootDir = AdjustedDir;
-	//	}
-	//}
 
 	FTransform SpawnTM(ShootDir.Rotation(), Origin);
 
@@ -230,6 +216,27 @@ void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClas
 
 void AShooterWeapon::ReloadMagazine()
 {
+	GetWorld()->GetTimerManager().SetTimer(
+		ReloadTimerHandle,
+		this,
+		&AShooterWeapon::FinishReload,
+		1.0f,
+		false
+	);
+
+	if (ReloadSound) {
+
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			ReloadSound,
+			GetActorLocation()
+		);
+	}
+}
+
+
+void AShooterWeapon::FinishReload()
+{
 	UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
@@ -240,7 +247,6 @@ void AShooterWeapon::ReloadMagazine()
 			GameInstance->Magazine = 10;
 		}
 	}
-
 }
 
 FVector AShooterWeapon::GetCameraDamageStartLocation(const FVector& AimDir) const

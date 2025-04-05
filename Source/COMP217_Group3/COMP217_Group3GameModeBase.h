@@ -23,6 +23,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	int TimerCount = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* BGM_Sound;
 
 private:
 	void SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint);
