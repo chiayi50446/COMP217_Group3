@@ -22,19 +22,13 @@ AShooterWeapon::AShooterWeapon(const FObjectInitializer& ObjectInitializer) : Su
 	Mesh1P->SetCollisionResponseToAllChannels(ECR_Ignore);
 	RootComponent = Mesh1P;
 
-	bLoopedMuzzleFX = false;
 	bLoopedFireAnim = false;
 	bPlayingFireAnim = false;
 	bIsEquipped = false;
 	bWantsToFire = false;
 	bPendingReload = false;
-	bPendingEquip = false;
-	CurrentState = EWeaponState::Idle;
 
-	CurrentAmmo = 0;
-	CurrentAmmoInClip = 0;
 	BurstCounter = 0;
-	LastFireTime = 0.0f;
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
@@ -46,12 +40,6 @@ AShooterWeapon::AShooterWeapon(const FObjectInitializer& ObjectInitializer) : Su
 void AShooterWeapon::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	if (WeaponConfig.InitialClips > 0)
-	{
-		CurrentAmmoInClip = WeaponConfig.AmmoPerClip;
-		CurrentAmmo = WeaponConfig.AmmoPerClip * WeaponConfig.InitialClips;
-	}
 
 	DetachMeshFromPawn();
 }
@@ -67,28 +55,6 @@ void AShooterWeapon::Destroyed()
 void AShooterWeapon::OnEquip(const AShooterWeapon* LastWeapon)
 {
 	AttachMeshToPawn();
-
-	bPendingEquip = true;
-
-	// Only play animation if last weapon is valid
-	//if (LastWeapon)
-	//{
-	//	float Duration = PlayWeaponAnimation(EquipAnim);
-	//	if (Duration <= 0.0f)
-	//	{
-	//		// failsafe
-	//		Duration = 0.5f;
-	//	}
-	//	EquipStartedTime = GetWorld()->GetTimeSeconds();
-	//	EquipDuration = Duration;
-
-	//	GetWorldTimerManager().SetTimer(TimerHandle_OnEquipFinished, this, &AShooterWeapon::OnEquipFinished, Duration, false);
-	//}
-	//else
-	//{
-	//	OnEquipFinished();
-	//}
-
 }
 
 void AShooterWeapon::OnEquipFinished()
@@ -96,7 +62,6 @@ void AShooterWeapon::OnEquipFinished()
 	AttachMeshToPawn();
 
 	bIsEquipped = true;
-	bPendingEquip = false;
 }
 
 
@@ -140,11 +105,6 @@ class AFPSCharacter* AShooterWeapon::GetPawnOwner() const
 bool AShooterWeapon::IsEquipped() const
 {
 	return bIsEquipped;
-}
-
-bool AShooterWeapon::IsAttachedToPawn() const
-{
-	return bIsEquipped || bPendingEquip;
 }
 
 void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass)

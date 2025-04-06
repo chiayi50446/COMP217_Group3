@@ -22,4 +22,8 @@ public:
     FString FinalLevel = "Demonstration";
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Magazine;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BGMVolume = 1;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float SFXVolume = 1;
 };
