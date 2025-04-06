@@ -125,4 +125,9 @@ public:
 
 	UFUNCTION()
 	void SetIsFire(bool newIsFire);
+
+	FTimerHandle FireCooldownTimer;
+	bool bCanFire = true;
+	UFUNCTION()
+	void ResetFire();
 };

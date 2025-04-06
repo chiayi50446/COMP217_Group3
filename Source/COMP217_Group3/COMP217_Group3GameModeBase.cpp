@@ -6,7 +6,6 @@
 #include "TimerManager.h"
 #include "FPSGameInstance.h"
 #include "FPSPlayerState.h"
-#include "ShootingTarget.h"
 #include <Kismet/GameplayStatics.h>
 
 
@@ -42,7 +41,7 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
 
     if (BGM_Sound)
     {
-        UGameplayStatics::PlaySound2D(this, BGM_Sound, 0.2f, 1.0f, 0.0f);  // ¥`¿ÙºΩ©Ò
+        UGameplayStatics::PlaySound2D(this, BGM_Sound, 1.0f, 1.0f, 0.0f);
     }
 }
 

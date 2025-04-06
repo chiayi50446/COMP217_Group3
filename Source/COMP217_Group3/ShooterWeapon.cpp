@@ -22,14 +22,6 @@ AShooterWeapon::AShooterWeapon(const FObjectInitializer& ObjectInitializer) : Su
 	Mesh1P->SetCollisionResponseToAllChannels(ECR_Ignore);
 	RootComponent = Mesh1P;
 
-	bLoopedFireAnim = false;
-	bPlayingFireAnim = false;
-	bIsEquipped = false;
-	bWantsToFire = false;
-	bPendingReload = false;
-
-	BurstCounter = 0;
-
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
 	SetRemoteRoleForBackwardsCompat(ROLE_SimulatedProxy);
@@ -56,14 +48,6 @@ void AShooterWeapon::OnEquip(const AShooterWeapon* LastWeapon)
 {
 	AttachMeshToPawn();
 }
-
-void AShooterWeapon::OnEquipFinished()
-{
-	AttachMeshToPawn();
-
-	bIsEquipped = true;
-}
-
 
 void AShooterWeapon::AttachMeshToPawn()
 {
@@ -100,11 +84,6 @@ void AShooterWeapon::SetOwningPawn(AFPSCharacter* NewOwner)
 class AFPSCharacter* AShooterWeapon::GetPawnOwner() const
 {
 	return MyPawn;
-}
-
-bool AShooterWeapon::IsEquipped() const
-{
-	return bIsEquipped;
 }
 
 void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass)

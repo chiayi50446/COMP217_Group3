@@ -3,6 +3,7 @@
 
 #include "FPSCharacter.h"
 #include "ShooterWeapon.h"
+#include "TimerManager.h"
 #include <Kismet/GameplayStatics.h>
 
 // Sets default values
@@ -133,7 +134,7 @@ void AFPSCharacter::PlayerMoveSound(float Value) {
 		if (WalkAudioComponent != nullptr)
 		{
 			WalkAudioComponent->SetPitchMultiplier(2.8f);
-			WalkAudioComponent->SetVolumeMultiplier(1.0f);
+			WalkAudioComponent->SetVolumeMultiplier(0.3f);
 			WalkAudioComponent->Play();
 		}
 	}
@@ -174,10 +175,20 @@ void AFPSCharacter::PlayJumpSound() {
 
 void AFPSCharacter::Fire()
 {
+	if (!bCanFire) return;
+
 	if (CurrentWeapon && !isReload && !isFire) {
 		CurrentWeapon->FireWeapon(ProjectileClass);
 		isFire = true;
+		bCanFire = false;
+		GetWorldTimerManager().SetTimer(FireCooldownTimer, this, &AFPSCharacter::ResetFire, 0.2f, false);
 	}
+}
+
+void AFPSCharacter::ResetFire()
+{
+	isFire = false;
+	bCanFire = true;
 }
 
 void AFPSCharacter::Reload()
