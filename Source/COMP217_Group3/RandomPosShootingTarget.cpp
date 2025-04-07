@@ -14,6 +14,7 @@ ARandomPosShootingTarget::~ARandomPosShootingTarget()
 void ARandomPosShootingTarget::BeginPlay()
 {
     AShootingTarget::BeginPlay();
+    FVector StartPosition = GetActorLocation();
 
     RespawnPos();
 }
@@ -24,8 +25,10 @@ void ARandomPosShootingTarget::RespawnPos()
     if (RespawnPoints.Num() == 0) return;
 
     int32 RandomIndex = FMath::RandRange(0, RespawnPoints.Num() - 1);
-    FVector NewSpawnLocation = RespawnPoints[RandomIndex];
+    //FVector StartPosition = GetActorLocation();
+    FVector NewSpawnLocation = RespawnPoints[RandomIndex] ;
     GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("RandomIndex"+ RandomIndex));
+    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("RandomIndex" + NewSpawnLocation));
 
     SetActorLocation(NewSpawnLocation);
 }

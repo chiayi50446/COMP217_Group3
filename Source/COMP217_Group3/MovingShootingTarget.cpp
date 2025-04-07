@@ -16,9 +16,10 @@ void AMovingShootingTarget::BeginPlay()
     AShootingTarget::BeginPlay();
 
     if (TargetPoints.Num() > 0)
-    {
+    {   
         SetActorLocation(TargetPoints[0]);
         CurrentTargetIndex = 1;
+
     }
 }
 
@@ -29,6 +30,7 @@ void AMovingShootingTarget::Tick(float DeltaTime)
     if (TargetPoints.Num() == 0) return;
 
     FVector CurrentLocation = GetActorLocation();
+    UE_LOG(LogTemp, Warning, TEXT("Current Location: %s"), *CurrentLocation.ToString());
     FVector TargetLocation = TargetPoints[CurrentTargetIndex];
 
     FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
