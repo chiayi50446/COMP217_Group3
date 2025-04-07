@@ -15,8 +15,6 @@ void ARandomPosShootingTarget::BeginPlay()
 {
     AShootingTarget::BeginPlay();
     FVector StartPosition = GetActorLocation();
-
-    RespawnPos();
 }
 
 void ARandomPosShootingTarget::RespawnPos()
@@ -31,4 +29,17 @@ void ARandomPosShootingTarget::RespawnPos()
     //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("RandomIndex" + NewSpawnLocation));
 
     SetActorLocation(NewSpawnLocation);
+}
+
+
+void ARandomPosShootingTarget::InitRespawnPoints(TArray<FVector> Points)
+{
+    RespawnPoints = Points;
+    RespawnPos();
+}
+
+void ARandomPosShootingTarget::Respawn()
+{
+    ACOMP217_Group3GameModeBase* GameMode = GetWorld()->GetAuthGameMode<ACOMP217_Group3GameModeBase>();
+    GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint, RespawnPoints);
 }

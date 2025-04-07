@@ -3,6 +3,8 @@
 
 #include "COMP217_Group3GameModeBase.h"
 #include "ShootingTarget.h"
+#include "MovingShootingTarget.h"
+#include "RandomPosShootingTarget.h"
 #include "TimerManager.h"
 #include "FPSGameInstance.h"
 #include "FPSPlayerState.h"
@@ -56,24 +58,33 @@ void ACOMP217_Group3GameModeBase::StartPlay()
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Hello World, this is FPSGameMode!"));
 
 }
-void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint)
+void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints)
 {
-    GetWorldTimerManager().SetTimerForNextTick([this, SpawnLocation, TargetBlueprint]() {
+    GetWorldTimerManager().SetTimerForNextTick([this, SpawnLocation, TargetBlueprint, TargetPoints]() {
         FTimerHandle TimerHandle;
         GetWorldTimerManager().SetTimer(
             TimerHandle,
-            FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation, TargetBlueprint),
+            FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation, TargetBlueprint, TargetPoints),
             1.0f,
             false
         );
         });
 }
 
-void ACOMP217_Group3GameModeBase::SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint)
+void ACOMP217_Group3GameModeBase::SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints)
 {
     if (TargetBlueprint)
     {
-        GetWorld()->SpawnActor<AShootingTarget>(TargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
+        AShootingTarget* NewTarget = GetWorld()->SpawnActor<AShootingTarget>(TargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
+
+        if (AMovingShootingTarget* MovingTarget = Cast<AMovingShootingTarget>(NewTarget))
+        {
+            MovingTarget->InitTargetPoints(TargetPoints);
+        } 
+        if (ARandomPosShootingTarget* RandomPosTarget = Cast<ARandomPosShootingTarget>(NewTarget))
+        {
+            RandomPosTarget->InitRespawnPoints(TargetPoints);
+        }
     }
 }
 

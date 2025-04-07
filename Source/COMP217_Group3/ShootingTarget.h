@@ -26,6 +26,8 @@ public:
 	UFUNCTION()
 	void OnHit(AActor* HitActor);
 
+	virtual void Respawn();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* SkeletalMesh;
 

@@ -12,7 +12,7 @@ class COMP217_GROUP3_API AMovingShootingTarget : public AShootingTarget
 {
 	GENERATED_BODY()
 public:
-	AMovingShootingTarget();
+    AMovingShootingTarget();
 	~AMovingShootingTarget();
     virtual void Tick(float DeltaTime) override;
 
@@ -21,6 +21,9 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (MakeEditWidget = true))
     TArray<FVector> TargetPoints;
+
+    void InitTargetPoints(TArray<FVector> Points);
+    virtual void Respawn() override;
 
 protected:
     virtual void BeginPlay() override;

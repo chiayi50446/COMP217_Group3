@@ -55,8 +55,7 @@ void AShootingTarget::OnHit(AActor* HitActor)
     ACOMP217_Group3GameModeBase* GameMode = GetWorld()->GetAuthGameMode<ACOMP217_Group3GameModeBase>();
     if (GameMode)
     {
-        GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint);
-
+        Respawn();
         if (AddTime != 0)
         {
             GameMode->AddTimer(AddTime);
@@ -65,4 +64,10 @@ void AShootingTarget::OnHit(AActor* HitActor)
 
     // remove Target
     Destroy();
+}
+
+void AShootingTarget::Respawn()
+{
+    ACOMP217_Group3GameModeBase* GameMode = GetWorld()->GetAuthGameMode<ACOMP217_Group3GameModeBase>();
+    GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint);
 }

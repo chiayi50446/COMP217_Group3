@@ -18,7 +18,7 @@ class COMP217_GROUP3_API ACOMP217_Group3GameModeBase : public AGameModeBase
 public:
 	UFUNCTION()
 	void BeginPlay() override;
-	void RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint);
+	void RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints = TArray<FVector>());
 	void AddTimer(int addTime);
 
 	UPROPERTY(BlueprintReadOnly)
@@ -27,7 +27,7 @@ public:
 	USoundBase* BGM_Sound;
 
 private:
-	void SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint);
+	void SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints = TArray<FVector>());
 	void GameEnd();
 	FTimerHandle CountDownTimerHandle = FTimerHandle();
 	void CoutDownTimer();

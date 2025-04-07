@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ShootingTarget.h"
+#include "COMP217_Group3GameModeBase.h"
 #include "RandomPosShootingTarget.generated.h"
 
 UCLASS()
@@ -19,6 +20,9 @@ public:
 	TArray<FVector> RespawnPoints;
 
 	void RespawnPos();
+
+	void InitRespawnPoints(TArray<FVector> Points);
+	virtual void Respawn() override;
 
 protected:
 	virtual void BeginPlay() override;

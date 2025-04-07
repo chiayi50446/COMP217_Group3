@@ -2,6 +2,7 @@
 
 
 #include "MovingShootingTarget.h"
+#include "COMP217_Group3GameModeBase.h"
 
 AMovingShootingTarget::AMovingShootingTarget()
 {
@@ -49,4 +50,15 @@ void AMovingShootingTarget::Tick(float DeltaTime)
     {
         CurrentTargetIndex = (CurrentTargetIndex + 1) % TargetPoints.Num();
     }
+}
+
+void AMovingShootingTarget::InitTargetPoints(TArray<FVector> Points)
+{
+    TargetPoints = Points;
+}
+
+void AMovingShootingTarget::Respawn()
+{
+    ACOMP217_Group3GameModeBase* GameMode = GetWorld()->GetAuthGameMode<ACOMP217_Group3GameModeBase>();
+    GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint, TargetPoints);
 }
