@@ -15,6 +15,7 @@ void ARandomPosShootingTarget::BeginPlay()
 {
     AShootingTarget::BeginPlay();
     FVector StartPosition = GetActorLocation();
+    RespawnPos();
 }
 
 void ARandomPosShootingTarget::RespawnPos()
