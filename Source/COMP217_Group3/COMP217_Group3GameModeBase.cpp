@@ -26,12 +26,12 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
 
     if (CurrentLevelName == "Safe_House")
     {
-        TimerCount = 30;
+        TimerCount = 60;
         if (GameInstance) GameInstance->Magazine = 5;
     }
     else if (CurrentLevelName == "Demonstration")
     {
-        TimerCount = 50;
+        TimerCount = 120;
         if (GameInstance) GameInstance->Magazine = 10;
     }
     else
@@ -65,7 +65,7 @@ void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation, TSubclass
         GetWorldTimerManager().SetTimer(
             TimerHandle,
             FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation, TargetBlueprint, TargetPoints),
-            1.0f,
+            5.0f,
             false
         );
         });

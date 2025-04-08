@@ -55,6 +55,11 @@ void AMovingShootingTarget::Tick(float DeltaTime)
 void AMovingShootingTarget::InitTargetPoints(TArray<FVector> Points)
 {
     TargetPoints = Points;
+    if (TargetPoints.Num() > 0)
+    {
+        SetActorLocation(TargetPoints[0]);
+        CurrentTargetIndex = 1;
+    }
 }
 
 void AMovingShootingTarget::Respawn()
