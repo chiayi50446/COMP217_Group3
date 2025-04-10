@@ -44,19 +44,21 @@ AFPSProjectile::AFPSProjectile()
 	if (!ProjectileMeshComponent)
 	{
 		ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
-		static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("'/Game/Sphere.Sphere'"));
+		static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("'/Game/Bullet/9mm_Luger.9mm_Luger'"));
 		if (Mesh.Succeeded())
 		{
 			ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
 		}
 
-		static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("'/Game/SphereMaterial.SphereMaterial'"));
+		static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("'/Game/Bullet/M_Bullet.M_Bullet'"));
 		if (Material.Succeeded())
 		{
 			ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
 		}
 		ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
-		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
+		//ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
+		ProjectileMeshComponent->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+		ProjectileMeshComponent->SetRelativeRotation(FRotator(0.f, 90.0f, 0.f));
 		ProjectileMeshComponent->SetupAttachment(RootComponent);
 	}
 	// Delete the projectile after 3 seconds.
@@ -96,5 +98,5 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 	{
 		Target->OnHit(GetInstigator());
 	}
-	Destroy();
+	//Destroy();
 }

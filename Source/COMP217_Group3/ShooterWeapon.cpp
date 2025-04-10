@@ -110,6 +110,28 @@ void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClas
 			GameInstance->Magazine--;
 		}
 	}
+	if (MuzzleFX)
+	{
+		if (MuzzlePSC == NULL)
+		{
+			// Split screen requires we create 2 effects. One that we see and one that the other player sees.
+			if ((MyPawn != NULL) && (MyPawn->IsLocallyControlled() == true))
+			{
+				AController* PlayerCon = MyPawn->GetController();
+				if (PlayerCon != NULL)
+				{
+					Mesh1P->GetSocketLocation(MuzzleAttachPoint);
+					MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFX, Mesh1P, MuzzleAttachPoint);
+					MuzzlePSC->bOwnerNoSee = false;
+					MuzzlePSC->bOnlyOwnerSee = true;
+				}
+			}
+			else
+			{
+				MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFX, Mesh1P, MuzzleAttachPoint);
+			}
+		}
+	}
 
 	if (FireSound) {
 		UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(
@@ -150,6 +172,23 @@ void AShooterWeapon::FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClas
 			Projectile->FireInDirection(ShootDir);
 
 		}
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(
+		FlameTimerHandle,
+		this,
+		&AShooterWeapon::StopSimulatingWeaponFire,
+		0.06f,
+		false
+	);
+}
+
+void AShooterWeapon::StopSimulatingWeaponFire() {
+
+	if (MuzzlePSC != NULL)
+	{
+		MuzzlePSC->DeactivateSystem();
+		MuzzlePSC = NULL;
 	}
 }
 

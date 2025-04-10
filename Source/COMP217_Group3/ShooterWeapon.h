@@ -68,6 +68,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
 	USoundBase* ReloadSound;
 
+	/** FX for muzzle flash */
+	UPROPERTY(EditDefaultsOnly, Category = Effects)
+	UParticleSystem* MuzzleFX;
+	/** spawned component for muzzle FX */
+	UPROPERTY(Transient)
+	UParticleSystemComponent* MuzzlePSC;
+	void StopSimulatingWeaponFire();
+
 	/** attaches weapon mesh to pawn's mesh */
 	void AttachMeshToPawn();
 
@@ -93,6 +101,7 @@ public:
 	/** weapon specific fire implementation */
 	virtual void FireWeapon(TSubclassOf<class AFPSProjectile> ProjectileClass);
 	virtual void ReloadMagazine();
+	FTimerHandle FlameTimerHandle;
 	FTimerHandle ReloadTimerHandle;
 	void FinishReload();
 
