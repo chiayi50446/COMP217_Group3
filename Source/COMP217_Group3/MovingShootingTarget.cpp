@@ -28,7 +28,12 @@ void AMovingShootingTarget::Tick(float DeltaTime)
 {
     AShootingTarget::Tick(DeltaTime);
 
-    if (TargetPoints.Num() == 0) return;
+    if (IsPendingKill() || IsActorBeingDestroyed())
+    {
+        return;
+    }
+
+    if (TargetPoints.Num()==0) return;
 
     FVector CurrentLocation = GetActorLocation();
     UE_LOG(LogTemp, Warning, TEXT("Current Location: %s"), *CurrentLocation.ToString());

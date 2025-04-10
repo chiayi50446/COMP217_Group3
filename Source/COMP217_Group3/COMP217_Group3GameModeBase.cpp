@@ -8,6 +8,7 @@
 #include "TimerManager.h"
 #include "FPSGameInstance.h"
 #include "FPSPlayerState.h"
+#include "ShooterPlayerController.h"
 #include <Kismet/GameplayStatics.h>
 
 
@@ -19,9 +20,18 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
     CurrentLevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
     UFPSGameInstance* GameInstance = Cast<UFPSGameInstance>(GetGameInstance());
+    AShooterPlayerController* playerController = Cast<AShooterPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
     if (GameInstance && !CurrentLevelName.Contains("Menu"))
     {
         GameInstance->CurrentLevel = CurrentLevelName;
+        if (playerController) {
+            playerController->SetModeGame();
+        }
+    }
+    else {
+        if (playerController) {
+            playerController->SetModeUI();
+        }
     }
 
     if (CurrentLevelName == "Safe_House")

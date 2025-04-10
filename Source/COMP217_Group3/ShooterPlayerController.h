@@ -8,6 +8,10 @@ UCLASS()
 class AShooterPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	void SetModeGame();
+	void SetModeUI();
 };
 
 
