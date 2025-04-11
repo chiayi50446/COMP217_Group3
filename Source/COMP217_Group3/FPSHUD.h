@@ -27,6 +27,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UUserWidget> ScoreWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class UUserWidget> TutorialWidgetClass;
+
 	UPROPERTY()
 	class UUserWidget* ScoreWidget;
+	UPROPERTY()
+	class UUserWidget* TutorialWidget;
 };

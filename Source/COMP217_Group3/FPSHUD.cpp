@@ -20,6 +20,14 @@ void AFPSHUD::BeginPlay()
 		}
 	}
 
+	if (CurrentLevelName == "Safe_House" && TutorialWidgetClass) {
+		TutorialWidget = CreateWidget<UUserWidget>(GetWorld(), TutorialWidgetClass);
+		if (TutorialWidget)
+		{
+			TutorialWidget->AddToViewport();
+		}
+	}
+
 }
 
 void AFPSHUD::DrawHUD()
