@@ -36,12 +36,12 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
 
     if (CurrentLevelName == "Safe_House")
     {
-        TimerCount = 60;
+        TimerCount = 30;
         if (GameInstance) GameInstance->Magazine = 5;
     }
     else if (CurrentLevelName == "Demonstration")
     {
-        TimerCount = 120;
+        TimerCount = 90;
         if (GameInstance) GameInstance->Magazine = 10;
     }
     else
@@ -70,27 +70,35 @@ void ACOMP217_Group3GameModeBase::StartPlay()
 }
 void ACOMP217_Group3GameModeBase::RespawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints)
 {
-    GetWorldTimerManager().SetTimerForNextTick([this, SpawnLocation, TargetBlueprint, TargetPoints]() {
-        FTimerHandle TimerHandle;
-        GetWorldTimerManager().SetTimer(
-            TimerHandle,
-            FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation, TargetBlueprint, TargetPoints),
-            5.0f,
-            false
-        );
-        });
+    FTimerHandle TimerHandle;
+    GetWorldTimerManager().SetTimer(
+        TimerHandle,
+        FTimerDelegate::CreateUObject(this, &ACOMP217_Group3GameModeBase::SpawnTarget, SpawnLocation, TargetBlueprint, TargetPoints),
+        5.0f,
+        false
+    );
 }
 
 void ACOMP217_Group3GameModeBase::SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints)
 {
-    if (TargetBlueprint)
+    if (!TargetBlueprint)
     {
-        AShootingTarget* NewTarget = GetWorld()->SpawnActor<AShootingTarget>(TargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
+        UE_LOG(LogTemp, Error, TEXT("SpawnTarget Failed: TargetBlueprint is null!"));
+        return;
+    }
 
+    if (UWorld* World = GetWorld())
+    {
+        AShootingTarget* NewTarget = World->SpawnActor<AShootingTarget>(TargetBlueprint, SpawnLocation, FRotator::ZeroRotator);
+        if (!NewTarget)
+        {
+            UE_LOG(LogTemp, Error, TEXT("SpawnTarget Failed: NewTarget spawn failed!"));
+            return;
+        }
         if (AMovingShootingTarget* MovingTarget = Cast<AMovingShootingTarget>(NewTarget))
         {
             MovingTarget->InitTargetPoints(TargetPoints);
-        } 
+        }
         if (ARandomPosShootingTarget* RandomPosTarget = Cast<ARandomPosShootingTarget>(NewTarget))
         {
             RandomPosTarget->InitRespawnPoints(TargetPoints);
