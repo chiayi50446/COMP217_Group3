@@ -5,7 +5,10 @@
 #include "FPSCharacter.h"
 #include "FPSPlayerState.h"
 #include "Animation/AnimSequence.h"
+#include "Blueprint/UserWidget.h"
 #include "COMP217_Group3GameModeBase.h"
+#include <Components/TextBlock.h>
+#include "Styling/SlateColor.h"
 
 // Sets default values
 AShootingTarget::AShootingTarget()
@@ -49,6 +52,8 @@ void AShootingTarget::OnHit(AActor* HitActor)
             {
                 PlayerState->AddScore(Score);
             }
+
+            ShowScorePopup();
         }
     }
 
@@ -72,4 +77,59 @@ void AShootingTarget::Respawn()
 {
     ACOMP217_Group3GameModeBase* GameMode = GetWorld()->GetAuthGameMode<ACOMP217_Group3GameModeBase>();
     GameMode->RespawnTarget(GetActorLocation(), TargetBlueprint);
+}
+
+void AShootingTarget::ShowScorePopup()
+{
+    if (ScoreWidgetClass)
+    {
+        ScoreWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), ScoreWidgetClass);
+        if (ScoreWidgetInstance)
+        {
+            ScoreWidgetInstance->AddToViewport();
+
+            UTextBlock* ScoreText = Cast<UTextBlock>(ScoreWidgetInstance->GetWidgetFromName("ScoreText"));
+            if (ScoreText)
+            {
+                FLinearColor Color;
+                if (Score == 0) {
+                    FString Message = FString::Printf(TEXT("+ %d seconds"), AddTime);
+                    ScoreText->SetText(FText::FromString(Message));
+                    Color = FLinearColor::Yellow;
+                }
+                else {
+
+                    ScoreText->SetText(FText::AsNumber(Score));
+
+                    if (Score > 0) {
+                        Color = FLinearColor::Green;
+                    }
+                    else {
+                        Color = FLinearColor::Red;
+                    }
+                    
+                }
+                ScoreText->SetColorAndOpacity(FSlateColor(Color));
+            }
+
+            GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+                {
+                    this->UpdateWidgetPosition();
+                });
+        }
+    }
+}
+void AShootingTarget::UpdateWidgetPosition()
+{
+    if (ScoreWidgetInstance)
+    {
+        FVector WorldLocation = GetActorLocation() + ScoreOffset;
+
+        FVector2D ScreenPosition;
+        APlayerController* PC = GetWorld()->GetFirstPlayerController();
+        if (PC && PC->ProjectWorldLocationToScreen(WorldLocation, ScreenPosition))
+        {
+            ScoreWidgetInstance->SetPositionInViewport(ScreenPosition, true);
+        }
+    }
 }

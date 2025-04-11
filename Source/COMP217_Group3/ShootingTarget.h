@@ -28,6 +28,9 @@ public:
 
 	virtual void Respawn();
 
+	void ShowScorePopup();
+	void UpdateWidgetPosition();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* SkeletalMesh;
 
@@ -39,4 +42,12 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Respawn")
 	TSubclassOf<AShootingTarget> TargetBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> ScoreWidgetClass;
+
+	UUserWidget* ScoreWidgetInstance;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	FVector ScoreOffset = FVector(0, 0, 200);
 };
