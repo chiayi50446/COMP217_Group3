@@ -53,7 +53,7 @@ void ACOMP217_Group3GameModeBase::BeginPlay()
 
     if (BGM_Sound)
     {
-        UGameplayStatics::PlaySound2D(this, BGM_Sound, 1.0f, 1.0f, 0.0f);
+        UGameplayStatics::PlaySound2D(this, BGM_Sound, 0.7f, 1.0f, 0.0f);
     }
 }
 
@@ -129,9 +129,26 @@ void ACOMP217_Group3GameModeBase::CoutDownTimer()
         GetWorldTimerManager().ClearTimer(CountDownTimerHandle);
         GameEnd();
     }
+
+    if (TimerCount == 1) {
+        PlayTimesUpSound();
+    }
+    else if (TimerCount <= 10) {
+        PlayClockTick();
+    }
 }
 
 void ACOMP217_Group3GameModeBase::AddTimer(int addTime)
 {
     TimerCount += addTime;
+}
+
+void ACOMP217_Group3GameModeBase::PlayClockTick()
+{
+    UGameplayStatics::PlaySound2D(this, ClockTickSound);
+}
+
+void ACOMP217_Group3GameModeBase::PlayTimesUpSound()
+{
+    UGameplayStatics::PlaySound2D(this, TimesUpSound);
 }

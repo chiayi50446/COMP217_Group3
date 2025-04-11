@@ -41,6 +41,12 @@ AFPSCharacter::AFPSCharacter()
 
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
+
+	if (!WalkAudioComponent) {
+		WalkAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("WalkAudioComponent"));
+		WalkAudioComponent->SetupAttachment(RootComponent);
+		WalkAudioComponent->bAutoActivate = false;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -70,7 +76,7 @@ void AFPSCharacter::BeginPlay()
 
 	if (MoveSound)
 	{
-		WalkAudioComponent = UGameplayStatics::SpawnSoundAttached(MoveSound, GetRootComponent());
+		WalkAudioComponent->SetSound(MoveSound);
 		WalkAudioComponent->Stop();
 	}
 }
@@ -79,7 +85,6 @@ void AFPSCharacter::BeginPlay()
 void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

@@ -26,9 +26,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* BGM_Sound;
 
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundBase* ClockTickSound;
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundBase* TimesUpSound;
+
 private:
 	void SpawnTarget(FVector SpawnLocation, TSubclassOf<AShootingTarget> TargetBlueprint, TArray<FVector> TargetPoints = TArray<FVector>());
 	void GameEnd();
 	FTimerHandle CountDownTimerHandle = FTimerHandle();
 	void CoutDownTimer();
+	void PlayClockTick();
+	void PlayTimesUpSound();
 };
